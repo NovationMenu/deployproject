@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-config
+  namespace: kubetest
+  labels:
+    app: postgres
+data:
+  POSTGRES_DB: restaurant
+  POSTGRES_USER: root
+  POSTGRES_PASSWORD: root

@@ -1,0 +1,45 @@
+name: Terraform sample workflow
+
+on: workflow_dispatch
+
+defaults:
+  run:
+    working-directory: ./terraform
+
+jobs:
+  createpvc:
+    runs-on: ubuntu-latest
+    needs: installcontrolleringress
+    steps:
+    - uses: actions/checkout@main
+    - name: "Configuration et connection a AKS"
+      uses: azure/aks-set-context@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        cluster-name: pfr
+        resource-group: RG-DEPLOYINFRA
+    - uses: azure/k8s-deploy@v1
+      with:
+        namespace: "kubetest"
+        manifests: |
+          ${{ github.workspace }}/manifests/namespace.yaml
+          ${{ github.workspace }}/manifests/storage.yaml
+          ${{ github.workspace }}/manifests/storage-pg.yaml
+  deploydatabase:
+    runs-on: ubuntu-latest
+    needs: createpvc
+    steps:
+    - uses: actions/checkout@main
+    - name: "Configuration et connection a AKS"
+      uses: azure/aks-set-context@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        cluster-name: pfr
+        resource-group: RG-DEPLOYINFRA
+    - uses: azure/k8s-deploy@v1
+      with:
+        namespace: "kubetest"
+        manifests: |
+          ${{ github.workspace }}/manifests/configmap-postgres.yaml
+          ${{ github.workspace }}/manifests/deployment-postgres.yaml
+          ${{ github.workspace }}/manifests/service-postgres.yaml

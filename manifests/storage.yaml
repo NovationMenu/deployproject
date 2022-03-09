@@ -1,0 +1,9 @@
+allowVolumeExpansion: true
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: postgresql-sc
+parameters:
+  skuName: Premium_LRS
+provisioner: kubernetes.io/azure-disk
+reclaimPolicy: Retain
