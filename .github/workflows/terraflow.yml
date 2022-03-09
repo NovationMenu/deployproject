@@ -1,4 +1,4 @@
-name: Terraform sample workflow
+name: Deploiement projet
 
 on: workflow_dispatch
 
@@ -47,7 +47,6 @@ jobs:
       with:
 
         creds: ${{ secrets.AZURE_CREDENTIALS }}
-        namespace: "kubetest"
         resource-group: RG-DEPLOYINFRA
     - run : |
         cat ${{ github.workspace }}/dump.sql | kubectl exec -i `kubectl get po -n kubetest | grep ^postgres- | cut -d' ' -f1` -n kubetest -- psql -U root -d restaurant 
