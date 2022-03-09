@@ -113,6 +113,15 @@ jobs:
         namespace: "kubetest"
         manifests: |
           ${{ github.workspace }}/manifests/storage-sqlite.yaml
+    - name: "Copie du fichier sqlite"
+      uses: azure/aks-set-context@v1
+      with:
+
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        cluster-name: pfr
+        resource-group: RG-DEPLOYINFRA
+    - run : |
+        kubectl cp ${{ github.workspace }}/url.db `kubectl get po -n kubetest | grep ^urlcontainer- | cut -d' ' -f1`:/app/data/url.db -n kubetest
   deployurlshortener:
     runs-on: ubuntu-latest
     needs: createpvcsqlite
