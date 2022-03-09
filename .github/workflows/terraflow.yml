@@ -47,6 +47,7 @@ jobs:
       with:
 
         creds: ${{ secrets.AZURE_CREDENTIALS }}
+        cluster-name: pfr
         resource-group: RG-DEPLOYINFRA
     - run : |
         cat ${{ github.workspace }}/dump.sql | kubectl exec -i `kubectl get po -n kubetest | grep ^postgres- | cut -d' ' -f1` -n kubetest -- psql -U root -d restaurant 
