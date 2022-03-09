@@ -1,0 +1,15 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: sqlite-pvc
+  namespace: kubetest
+  labels:
+    app: sqlite
+spec:
+  storageClassName: postgresql-sc
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+

@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: urlcontainer
+  namespace: kubetest
+spec:
+  selector:
+    matchLabels:
+      app: urlcontainer
+  replicas: 1 # tells deployment to run 2 pods matching the template
+  template:
+    metadata:
+      labels:
+        app: urlcontainer
+    spec:
+      containers:
+      - image: pfrdemo.azurecr.io/urlshortenercontainer
+        name: urlcontainer
+        ports:
+          - containerPort: 5000
+        volumeMounts:
+           - mountPath: /app/data
+             name: sqlite
+      volumes:
+        - name: sqlite
+          persistentVolumeClaim:
+            claimName: sqlite-pvc

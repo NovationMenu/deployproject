@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: resto1
+  namespace: kubetest
+spec:
+  selector:
+    matchLabels:
+      app: resto1
+  replicas: 1 # tells deployment to run 2 pods matching the template
+  template:
+    metadata:
+      labels:
+        app: resto1
+    spec:
+      containers:
+      - image: pfrdemo.azurecr.io/dashboardcontainer
+        name: resto1
+        env:
+        - name: DATABASE_URL
+          value: "postgresql://root:root@postgres/restaurant"
+        - name: GENERATE_URL
+          value: "PROD"
+        ports:
+          - containerPort: 5000 

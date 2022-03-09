@@ -50,4 +50,89 @@ jobs:
         cluster-name: pfr
         resource-group: RG-DEPLOYINFRA
     - run : |
-        cat ${{ github.workspace }}/dump.sql | kubectl exec -i `kubectl get po -n kubetest | grep ^postgres- | cut -d' ' -f1` -n kubetest -- psql -U root -d restaurant 
+        cat ${{ github.workspace }}/dump.sql | kubectl exec -i `kubectl get po -n kubetest | grep ^postgres- | cut -d' ' -f1` -n kubetest -- psql -U root -d restaurant
+  deploymenu:
+    runs-on: ubuntu-latest
+    needs: deploydatabase
+    steps:
+    - uses: actions/checkout@main
+    - uses: azure/docker-login@v1
+      with:
+        login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+        username: ${{ secrets.REGISTRY_USERNAME }}
+        password: ${{ secrets.REGISTRY_PASSWORD }}
+    - name: "Configuration et connection a AKS"
+      uses: azure/aks-set-context@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        cluster-name: pfr
+        resource-group: RG-DEPLOYINFRA
+    - uses: azure/k8s-deploy@v1
+      with:
+        namespace: "kubetest"
+        manifests: |
+          ${{ github.workspace }}/manifests/deployment-menu.yaml
+          ${{ github.workspace }}/manifests/service-menu.yaml
+        images: ${{ secrets.REGISTRY_LOGIN_SERVER }}/menucontainer
+  deploydashboard:
+    runs-on: ubuntu-latest
+    needs: deploymenu
+    steps:
+    - uses: actions/checkout@main
+    - uses: azure/docker-login@v1
+      with:
+        login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+        username: ${{ secrets.REGISTRY_USERNAME }}
+        password: ${{ secrets.REGISTRY_PASSWORD }}
+    - name: "Configuration et connection a AKS"
+      uses: azure/aks-set-context@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        cluster-name: pfr
+        resource-group: RG-DEPLOYINFRA
+    - uses: azure/k8s-deploy@v1
+      with:
+        namespace: "kubetest"
+        manifests: |
+          ${{ github.workspace }}/manifests/deployment-dashboard.yaml
+          ${{ github.workspace }}/manifests/service-dashboard.yaml
+        images: ${{ secrets.REGISTRY_LOGIN_SERVER }}/dashboardcontainer
+  createpvcsqlite:
+    runs-on: ubuntu-latest
+    needs: deploydashboard
+    steps:
+    - uses: actions/checkout@main
+    - name: "Configuration et connection a AKS"
+      uses: azure/aks-set-context@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        cluster-name: pfr
+        resource-group: RG-DEPLOYINFRA
+    - uses: azure/k8s-deploy@v1
+      with:
+        namespace: "kubetest"
+        manifests: |
+          ${{ github.workspace }}/manifests/storage-sqlite.yaml
+  deployurlshortener:
+    runs-on: ubuntu-latest
+    needs: createpvcsqlite
+    steps:
+    - uses: actions/checkout@main
+    - uses: azure/docker-login@v1
+      with:
+        login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+        username: ${{ secrets.REGISTRY_USERNAME }}
+        password: ${{ secrets.REGISTRY_PASSWORD }}
+    - name: "Configuration et connection a AKS"
+      uses: azure/aks-set-context@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        cluster-name: pfr
+        resource-group: RG-DEPLOYINFRA
+    - uses: azure/k8s-deploy@v1
+      with:
+        namespace: "kubetest"
+        manifests: |
+          ${{ github.workspace }}/manifests/deployment-dashboard.yaml
+          ${{ github.workspace }}/manifests/service-dashboard.yaml
+        images: ${{ secrets.REGISTRY_LOGIN_SERVER }}/urlshortenercontainer

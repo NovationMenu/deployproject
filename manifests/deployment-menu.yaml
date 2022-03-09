@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: menu1
+  namespace: kubetest
+spec:
+  selector:
+    matchLabels:
+      app: menu1
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: menu1
+    spec:
+      containers:
+      - image: registrypfr.azurecr.io/menucontainer
+        name: menu1
+        env:
+        - name: DATABASE_URL
+          value: "postgresql://root:root@postgres/restaurant"
+        ports:
+          - containerPort: 5001 
