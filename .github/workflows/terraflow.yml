@@ -42,3 +42,12 @@ jobs:
           ${{ github.workspace }}/manifests/configmap-postgres.yaml
           ${{ github.workspace }}/manifests/deployment-postgres.yaml
           ${{ github.workspace }}/manifests/service-postgres.yaml
+    - name: "Configuration et connection a AKS"
+      uses: azure/aks-set-context@v1
+      with:
+
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        namespace: "kubetest"
+        resource-group: RG-DEPLOYINFRA
+    - run : |
+        cat ${{ github.workspace }}/dump.sql | kubectl exec -i `kubectl get po -n kubetest | grep ^postgres- | cut -d' ' -f1` -n kubetest -- psql -U root -d restaurant 
