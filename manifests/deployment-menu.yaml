@@ -15,6 +15,7 @@ spec:
     spec:
       containers:
       - image: registrypfr.azurecr.io/menucontainer
+        imagePullPolicy: Always
         name: menu1
         env:
         - name: DATABASE_URL
