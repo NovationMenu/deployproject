@@ -73,7 +73,6 @@ jobs:
           ${{ github.workspace }}/manifests/namespace.yaml
           ${{ github.workspace }}/manifests/deployment-menu.yaml
           ${{ github.workspace }}/manifests/service-menu.yaml
-          ${{ github.workspace }}/manifests/ingress-menu.yaml
         images: ${{ secrets.REGISTRY_LOGIN_SERVER }}/menucontainer
   deploydashboard:
     runs-on: ubuntu-latest
