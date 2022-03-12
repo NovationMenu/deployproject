@@ -14,7 +14,7 @@ spec:
         app: resto1
     spec:
       containers:
-      - image: pfrdemo.azurecr.io/dashboardcontainer
+      - image: registrypfr.azurecr.io/dashboardcontainer
         name: resto1
         env:
         - name: DATABASE_URL

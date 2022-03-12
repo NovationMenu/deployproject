@@ -14,7 +14,7 @@ spec:
         app: urlcontainer
     spec:
       containers:
-      - image: pfrdemo.azurecr.io/urlshortenercontainer
+      - image: registrypfr.azurecr.io/urlshortenercontainer
         name: urlcontainer
         ports:
           - containerPort: 5000
