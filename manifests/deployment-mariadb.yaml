@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mariadb
+  namespace: kubetest
+spec:
+  selector:
+    matchLabels:
+      app: mariadb
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mariadb
+    spec:
+      containers:
+      - image: mariadb
+        name: mariadb
+        env:
+          # Use secret in real usage
+        - name: MYSQL_DATABASE
+          value: authelia
+        - name: MARIADB_ROOT_PASSWORD
+          value: ei36WLd3U
+        - name: MYSQL_USER
+          value: authelia
+        - name: MYSQL_PASSWORD
+          value: ei36WLd3U
+        ports:
+        - containerPort: 3306

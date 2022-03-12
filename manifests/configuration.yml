@@ -1,0 +1,92 @@
+###############################################################
+#                   Authelia configuration                    #
+###############################################################
+
+server:
+  host: 0.0.0.0
+  port: 9091
+log:
+  level: debug
+theme: light
+# This secret can also be set using the env variables AUTHELIA_JWT_SECRET_FILE
+jwt_secret: a_very_important_secret
+default_redirection_url: https://auth.novation-menu.com
+totp:
+  issuer: authelia.com
+
+# duo_api:
+#  hostname: api-123456789.example.com
+#  integration_key: ABCDEF
+#  # This secret can also be set using the env variables AUTHELIA_DUO_API_SECRET_KEY_FILE
+#  secret_key: 1234567890abcdefghifjkl
+
+authentication_backend:
+  file:
+    path: /config/users_database.yml
+    #password:
+    #  algorithm: argon2id
+    #  iterations: 1
+    #  salt_length: 16
+    #  parallelism: 8
+    #  memory: 64
+      
+access_control:
+  default_policy: deny
+  rules:
+    # Rules applied to everyone
+    - domain: pg.novation-menu.com
+      policy: one_factor
+    - domain: admin-resto1.novation-menu.com
+      policy: one_factor
+    - domain: admin-resto2.novation-menu.com
+      policy: one_factor
+      # policy: two_factor
+    - domain: traefik.novation-menu.com
+      policy: one_factor
+    - domain: prometheus.novation-menu.com
+      policy: one_factor
+    - domain: grafana.novation-menu.com
+      policy: one_factor
+    - domain: phpmyadmin.novation-menu.com
+      policy: one_factor
+
+session:
+  name: authelia_session
+  # This secret can also be set using the env variables AUTHELIA_SESSION_SECRET_FILE
+  secret: unsecure_session_secret
+  expiration: 3600  # 1 hour
+  inactivity: 300  # 5 minutes
+  domain: novation-menu.com  # Should match whatever your root protected domain is
+
+  redis:
+    host: redis.kubetest.svc.cluster.local
+    port: 6379
+    # This secret can also be set using the env variables AUTHELIA_SESSION_REDIS_PASSWORD_FILE
+    # password: authelia
+
+regulation:
+  max_retries: 3
+  find_time: 120
+  ban_time: 300
+
+storage:
+  encryption_key: a_very_important_secret # Now required
+  local:
+    path: /config/db.sqlite3
+  mysql:
+    host: autheliamariadb
+    port: 3306
+    database: authelia
+    username: authelia
+    password: ei36WLd3U  
+
+notifier:
+  # smtp:
+  #   username: test
+  #   # This secret can also be set using the env variables AUTHELIA_NOTIFIER_SMTP_PASSWORD_FILE
+  #   password: password
+  #   host: mail.example.com
+  #   port: 25
+  #   sender: admin@example.com
+  filesystem:
+    filename: /config/notification.txt

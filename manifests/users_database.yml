@@ -1,0 +1,29 @@
+users:
+  Richard:
+    password: $argon2id$v=19$m=1048576,p=8$Qkw5p0QuzCoK4yrt$595DlKmfPHHFVTBDvWMjyiV8wZCtD01FZgpMx5aVTLU
+    displayname: Richard CRUZ
+    email: richardc59@gmail.com
+    groups:
+    - admins
+    - dev
+  Nagi:
+    password: $argon2id$v=19$m=1048576,p=8$OHw/rXTyzdopF5S2$2TMYIf5sbp2u4963wOmwJ0RXhZ2DrM9IbT3eIErjn/4
+    displayname: Nagi
+    email: nagi.karaouzene@outlook.com
+    groups:
+    - admins
+    - dev
+  Boualem:
+    password: $argon2id$v=19$m=1048576,p=8$aF3hOc9Fj0uUk0Vs$vSHjY89QqMawi1aEXGpAYlIHLTpMwq3261MN9mvn/qk
+    displayname: Boualem
+    email: bbekhtaoui2021@gmail.com
+    groups:
+    - admins
+    - dev
+  Richard2:
+    password: $argon2id$v=19$m=1048576,p=8$xN2gXZA+Txg7UcJ3$ZxRHehyMwxtEGlUzdbqg9XJohoIeUn2kLs+qHI0o4Lg
+    displayname: Richard
+    email: rchrdcruz@gmail.com
+    groups:
+    - admins
+    - dev
