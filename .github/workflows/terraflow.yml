@@ -145,3 +145,31 @@ jobs:
         resource-group: RG-DEPLOYINFRA
     - run : |
         kubectl cp ${{ github.workspace }}/url.db `kubectl get po -n kubetest | grep ^urlcontainer- | cut -d' ' -f1`:/app/data/url.db -n kubetest
+  deployauthelia:
+    runs-on: ubuntu-latest
+    needs: deployurlshortener
+    steps:
+    - name: "Création des configMap"
+      uses: azure/aks-set-context@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        cluster-name: pfr
+        resource-group: RG-DEPLOYINFRA
+    - run : |
+        kubectl create configmap authelia-config --namespace=kubetest --from-file=${{ github.workspace }}/manifests/configuration.yml
+        kubectl create configmap authelia-users --namespace=kubetest --from-file=${{ github.workspace }}/manifests/users_database.yml
+    - uses: actions/checkout@main
+    - name: "Configuration et connection a AKS"
+      uses: azure/aks-set-context@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        cluster-name: pfr
+        resource-group: RG-DEPLOYINFRA
+    - uses: azure/k8s-deploy@v1
+      with:
+        namespace: "kubetest"
+        manifests: |
+          ${{ github.workspace }}/manifests/authelia-redis.yaml
+          ${{ github.workspace }}/manifests/deployment-mariadb.yaml
+          ${{ github.workspace }}/manifests/service-mariab.yaml
+          ${{ github.workspace }}/manifests/authelia-deployment.yaml
