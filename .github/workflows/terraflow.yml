@@ -156,8 +156,8 @@ jobs:
         cluster-name: pfr
         resource-group: RG-DEPLOYINFRA
     - run : |
-        kubectl create configmap authelia-config --namespace=kubetest --from-file=${{ github.workspace }}/manifests/configuration.yml
-        kubectl create configmap authelia-users --namespace=kubetest --from-file=${{ github.workspace }}/manifests/users_database.yml
+        kubectl create configmap authelia-config --namespace=kubetest --from-file=../manifests/configuration.yml
+        kubectl create configmap authelia-users --namespace=kubetest --from-file=../manifests/users_database.yml
     - uses: actions/checkout@main
     - name: "Configuration et connection a AKS"
       uses: azure/aks-set-context@v1
